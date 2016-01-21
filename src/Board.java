@@ -30,7 +30,7 @@ public class Board {
     private boolean horizontally (int row, int col) {
         for (int cols = 0; col < chessboard.length; col++) {
             if (cols == col) continue;
-            if (chessboard[row][cols] == 1) return true;
+            if (chessboard[row][cols] == 'Q') return true;
         }
         return false;
     }
@@ -38,25 +38,25 @@ public class Board {
     private boolean vertically (int row, int col) {
         for (int rows = 0; rows < chessboard.length; rows++) {
             if (rows == row) continue;
-            if (chessboard[rows][col] == 1) return true;
+            if (chessboard[rows][col] == 'Q') return true;
         }
         return false;
     }
 
     private boolean diagonally (int row, int col) {
         /*** ascending ***/ //zero-based
-        for (int rows = row, cols = col; rows < chessboard.length && cols < chessboard.length; rows++, cols++)
+        for (int rows = row +1, cols = col +1; rows < chessboard.length && cols < chessboard.length; rows++, cols++)
             if (chessboard[rows][cols] == 'Q') return true;
 
-        for (int rows = row, cols = col; rows >= 0 && cols >= 0; rows--, cols--)
+        for (int rows = row -1, cols = col -1; rows >= 0 && cols >= 0; rows--, cols--)
             if (chessboard[rows][cols] == 'Q') return true;
 
 
         /*** descending ***/ //zero-based
-        for (int rows = row, cols = col; rows >= 0 && cols < chessboard.length; rows--, cols++)
+        for (int rows = row -1, cols = col +1; rows >= 0 && cols < chessboard.length; rows--, cols++)
             if (chessboard[rows][cols] == 'Q') return true;
 
-        for (int rows = row, cols = col; rows < chessboard.length && cols >= 0; rows++, cols--)
+        for (int rows = row +1, cols = col -1; rows < chessboard.length && cols >= 0; rows++, cols--)
             if (chessboard[rows][cols] == 'Q') return true;
 
         return false;
