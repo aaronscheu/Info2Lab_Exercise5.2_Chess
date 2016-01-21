@@ -16,29 +16,29 @@ public class Board {
     }
 
     public void placeQueen (int row, int col) {
-        if (col < chessboard.length && row < chessboard.length)
-            chessboard[row][col] = 'Q';
+        chessboard[row][col] = 'Q';
     }
 
     public void removeQueen (int row, int col) {
-        if (col < chessboard.length && row < chessboard.length)
-            chessboard[row][col] = '*';
+        chessboard[row][col] = '*';
     }
 
     public boolean isThreatened (int row, int col) {
-        return horizontally(row) || vertically(col) || diagonally(row, col);
+        return horizontally(row, col) || vertically(row, col) || diagonally(row, col);
     }
 
-    private boolean horizontally (int row) {
-        for (int i = 0; i < chessboard.length; i++) {
-            if (chessboard[row][i] == 1) return true;
+    private boolean horizontally (int row, int col) {
+        for (int cols = 0; col < chessboard.length; col++) {
+            if (cols == col) continue;
+            if (chessboard[row][cols] == 1) return true;
         }
         return false;
     }
 
-    private boolean vertically (int col) {
-        for (int i = 0; i < chessboard.length; i++) {
-            if (chessboard[i][col] == 1) return true;
+    private boolean vertically (int row, int col) {
+        for (int rows = 0; rows < chessboard.length; rows++) {
+            if (rows == row) continue;
+            if (chessboard[rows][col] == 1) return true;
         }
         return false;
     }
