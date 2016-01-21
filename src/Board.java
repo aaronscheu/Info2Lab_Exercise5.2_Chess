@@ -3,20 +3,26 @@
  * Package: PACKAGE_NAME for Exercise5.2_Chess.
  */
 public class Board {
-    int[][] chessboard;
+    char[][] chessboard;
 
 
     public Board(int size) {
-        chessboard = new int[size][size];
+        chessboard = new char[size][size];
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                chessboard[y][x] = 0;
+                chessboard[y][x] = '*';
             }
         }
     }
 
-    public void placeQueen (int x, int y) {
-        chessboard[chessboard.length - y][x -1] = 1;
+    public void placeQueen (int row, int col) {
+        if (col < chessboard.length && row < chessboard.length)
+            chessboard[row][col] = 'Q';
+    }
+
+    public void removeQueen (int row, int col) {
+        if (col < chessboard.length && row < chessboard.length)
+            chessboard[row][col] = '*';
     }
 
     public boolean isThreatened (int row, int col) {
@@ -39,32 +45,48 @@ public class Board {
 
     private boolean diagonally (int row, int col) {
         /*** ascending ***/ //zero-based
-        if (row == col)
-            for (int rows = 0, cols = 0; rows < chessboard.length; rows++, cols++)
-                if (chessboard[rows][cols] == 1) return true;
+        for (int rows = row, cols = col; rows < chessboard.length && cols < chessboard.length; rows++, cols++)
+            if (chessboard[rows][cols] == 'Q') return true;
 
-        if (row > col)
-            for (int rows = 0, cols = (col - row); cols < chessboard.length; rows++, cols++)
-                if (chessboard[rows][cols] == 1) return true;
+        for (int rows = row, cols = col; rows >= 0 && cols >= 0; rows--, cols--)
+            if (chessboard[rows][cols] == 'Q') return true;
 
-        if (row < col)
-            for (int rows = (row - col), cols = 0; rows < chessboard.length; rows++, cols++)
-                if (chessboard[rows][cols] == 1) return true;
 
         /*** descending ***/ //zero-based
+        for (int rows = row, cols = col; rows >= 0 && cols < chessboard.length; rows--, cols++)
+            if (chessboard[rows][cols] == 'Q') return true;
 
-        if (row == (chessboard.length - col))
-            for (int rows = chessboard.length -1, cols = 0; rows > 0; rows--, cols++)
-                if (chessboard[rows][cols] == 1) return true;
+        for (int rows = row, cols = col; rows < chessboard.length && cols >= 0; rows++, cols--)
+            if (chessboard[rows][cols] == 'Q') return true;
 
-        if (row > (chessboard.length - col))
-            for (int rows = chessboard.length -1, cols = ((chessboard.length - col) - row) -1; rows > 0; rows--, cols++)
-                if (chessboard[rows][cols] == 1) return true;
+        return false;
+    }
 
-        if (row < (chessboard.length - col))
-            for (int rows = (row - (chessboard.length - col)) -1, cols = 0; rows > 0; rows--, cols++)
-                if (chessboard[rows][cols] == 1) return true;
+    /** Pseudo Code **
+     * boolean solveNQ (int col)
+     *  if col >= size then all done!
+     *  for row 0 to row n-1
+     *      if (row, col) is a safe(non-threatened) position place a Queen at (row, col)
+     *      if solveNQ (col + 1) is true then // ** recursive step **
+     *        return true
+     *      else
+     *        remove Queen from (row, col)    // ** backtracking step **
+     *  (Outside of loop:) return false
+     **/
 
+    public boolean setQueensRecursive (int col) {
+        if (col >= chessboard.length)
+            return true;
+
+        for (int row = 0; row < chessboard.length; row++) {
+            if (!isThreatened(row, col))
+                placeQueen(row, col);
+
+            if (setQueensRecursive(col +1))
+                return true;
+            else
+                removeQueen(row, col);
+        }
         return false;
     }
 
@@ -92,9 +114,8 @@ public class Board {
 
     public static void main(String[] args) {
         Board board = new Board(8);
-        board.placeQueen(1, 2);
+        board.setQueensRecursive(0);
         board.printBoard();
-        System.out.println(board.isThreatened(0,6));
     }
 
 }
