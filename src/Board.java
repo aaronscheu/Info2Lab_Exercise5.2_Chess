@@ -28,7 +28,7 @@ public class Board {
     }
 
     private boolean horizontally (int row, int col) {
-        for (int cols = 0; col < chessboard.length; col++) {
+        for (int cols = 0; cols < chessboard.length; cols++) {
             if (cols == col) continue;
             if (chessboard[row][cols] == 'Q') return true;
         }
@@ -74,6 +74,10 @@ public class Board {
      *  (Outside of loop:) return false
      **/
 
+    public boolean setQueensRecursive () {
+        return setQueensRecursive(0);
+    }
+
     public boolean setQueensRecursive (int col) {
         if (col >= chessboard.length)
             return true;
@@ -83,8 +87,6 @@ public class Board {
                 placeQueen(row, col);
 
             if (setQueensRecursive(col +1))
-                return true;
-            else
                 removeQueen(row, col);
         }
         return false;
@@ -114,7 +116,7 @@ public class Board {
 
     public static void main(String[] args) {
         Board board = new Board(8);
-        board.setQueensRecursive(0);
+        board.setQueensRecursive();
         board.printBoard();
     }
 
